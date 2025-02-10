@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Security.Permissions;
 namespace Proje6
 {
     public partial class Hareketler : Form
@@ -28,41 +29,35 @@ namespace Proje6
             Komut.Parameters.Add(new SqlParameter("@Musterı", SqlDbType.Int) { Value = 0 });
             Komut.Parameters.Add(new SqlParameter("@Personel", SqlDbType.Int) { Value = 0 });
             Komut.Parameters.Add(new SqlParameter("@Fıyet", SqlDbType.Int) { Value = 0 });
-            Komut.Parameters.Add(new SqlParameter("@ID", SqlDbType.Int) { Value = 0 });
+            Komut.Parameters.Add(new SqlParameter("@ID", SqlDbType.Int) { Value = 0 }); 
+            txtId.Text = null;
+            txtFıat.Text = null;
         }
 
         private void TabloDoldur()
         {
-
-            Data = new SqlDataAdapter("Execute Proje6", bag);
-            DataTable dt = new DataTable();
-            Data.Fill(dt);
-            dataGridView1.DataSource = dt;
-            txtId.Text = null;
-            txtFıat.Text = null;
+            CMBgetır(cmbAd, "Execute Proje6", "Tablo");
         }
         private void cmbDoldur()
         {
-            Data = new SqlDataAdapter("select * from URUNLER", bag);
+            CMBgetır(cmbAd, "select * from URUNLER", "AD", "ID");
+            CMBgetır(cmbMusterı, "select * from MUSTERILER", "ADSOYAD", "ID");
+            CMBgetır(cmbPersonel, "select * from PERSONELLER", "AD", "ID");
+        }
+
+        private void CMBgetır(ComboBox cmb, string kod, string Display = "AD", string Value = "ID")
+        {
+            Data = new SqlDataAdapter(kod, bag);
             DataTable Tablo = new DataTable();
             Data.Fill(Tablo);
-            cmbAd.DisplayMember = "AD";
-            cmbAd.ValueMember = "ID";
-            cmbAd.DataSource = Tablo;
-
-            Data = new SqlDataAdapter("select * from MUSTERILER", bag);
-            DataTable Tablo2 = new DataTable();
-            Data.Fill(Tablo2);
-            cmbMusterı.DisplayMember = "ADSOYAD";
-            cmbMusterı.ValueMember = "ID";
-            cmbMusterı.DataSource = Tablo2;
-
-            Data = new SqlDataAdapter("select * from PERSONELLER", bag);
-            DataTable Tablo3 = new DataTable();
-            Data.Fill(Tablo3);
-            cmbPersonel.DisplayMember = "AD";
-            cmbPersonel.ValueMember = "ID";
-            cmbPersonel.DataSource = Tablo3;
+            if (Display == "Tablo")
+                dataGridView1.DataSource = Tablo;
+            else
+            {
+                cmb.DisplayMember = Display;
+                cmb.ValueMember = Value;
+                cmb.DataSource = Tablo;
+            }
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -81,19 +76,67 @@ namespace Proje6
 
         private void btnEkle_Click(object sender, EventArgs e)
         {
+            if (KayıtKontrol())
+            {
+                txtId.Text = "0";
+                bag.Open();
+                Komut.CommandText = "insert into HAREKETLER (URUN,MUSTERI,personel,FIYAT) values (@Urun,@Musterı,@Personel,@Fıyet)";
+                DegısıklıkKaydet();
+            }
+        }
+        bool KayıtKontrol()
+        {
+           
             bag.Open();
-            Komut.CommandText = "insert into HAREKETLER (URUN,MUSTERI,personel,FIYAT) values (@Urun,@Musterı,@Personel,@Fıyet)";
-            DegısıklıkKaydet();
+            Komut.CommandText = "select AD,ALISFIYAT,SATISFIAT from URUNLER";
+            Komut.ExecuteNonQuery();
+            SqlDataReader reader = Komut.ExecuteReader();
+            while (reader.Read())
+            {
+                string AD = reader.GetString(0);
+                int ALISF = int.Parse(reader[1].ToString());
+                int SATISF = int.Parse(reader[2].ToString());
+                int FIAT = int.Parse(txtFıat.Text);
+                if (AD == cmbAd.Text)
+                {
+                    try
+                    {
+                        if (FIAT > ALISF & FIAT < SATISF)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            if (FIAT > ALISF)
+                            {
+                                MessageBox.Show($"Fiyatınız Alış Fiyatından Düşük! Lütfen şu aralıkta seçin: {ALISF} - {SATISF}");
+                            }
+                            else
+                            {
+                                MessageBox.Show($"Fiyatınız Satış Fiyatından Yüksek! Lütfen şu aralıkta seçin: {ALISF} - {SATISF}");
+                            } 
+                            return false;
+                        }
+                    }
+                    finally
+                    {
+                        bag.Close();
+                    }
+                }
+            }
+            return true;
         }
         private void btnGuncelle_Click(object sender, EventArgs e)
         {
-            bag.Open();
-            Komut.CommandText = "UPDATE HAREKETLER SET URUN=@Urun,MUSTERI=@Musterı,PERSONEL=@Personel,FIYAT=@Fıyet WHERE HAREKETID=@ID";
-            DegısıklıkKaydet();
+            if (KayıtKontrol())
+            {
+                bag.Open();
+                Komut.CommandText = "UPDATE HAREKETLER SET URUN=@Urun,MUSTERI=@Musterı,PERSONEL=@Personel,FIYAT=@Fıyet WHERE HAREKETID=@ID";
+                DegısıklıkKaydet();
+            }
         }
         private void btnSıl_Click(object sender, EventArgs e)
         {
-
             bag.Open();
             Komut.CommandText = "delete HAREKETLER where HAREKETLER.HAREKETID = @ID";
             DegısıklıkKaydet();
