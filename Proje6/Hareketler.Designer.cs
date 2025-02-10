@@ -32,9 +32,9 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtId = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.btnSıl = new System.Windows.Forms.Label();
-            this.btnGuncelle = new System.Windows.Forms.Label();
-            this.btnEkle = new System.Windows.Forms.Label();
+            this.btnSıl = new System.Windows.Forms.Button();
+            this.btnGuncelle = new System.Windows.Forms.Button();
+            this.btnEkle = new System.Windows.Forms.Button();
             this.txtFıat = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbPersonel = new System.Windows.Forms.ComboBox();
@@ -270,9 +270,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label btnSıl;
-        private System.Windows.Forms.Label btnGuncelle;
-        private System.Windows.Forms.Label btnEkle;
+        private System.Windows.Forms.Button btnSıl;
+        private System.Windows.Forms.Button btnGuncelle;
+        private System.Windows.Forms.Button btnEkle;
         private System.Windows.Forms.TextBox txtFıat;
         private System.Windows.Forms.TextBox txtId;
         private System.Windows.Forms.Label label8;
