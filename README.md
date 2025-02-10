@@ -26,4 +26,4 @@ Bu proje, **C#** ve **SQL Server** kullanılarak geliştirilmiş, ders kapsamın
 
 1. **Projeyi Klonlayın:**
    ```bash
-   git clone https:https://github.com/talhadrz/Sat_ve_Hareket_Yoneticisi_-_Ders-Projesi
+   https:https://github.com/talhadrz/Sat_ve_Hareket_Yoneticisi_-_Ders-Projesi
