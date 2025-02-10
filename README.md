@@ -1,6 +1,9 @@
 # Satış ve Hareket Yöneticisi - Ders Projesi
 
 Bu proje, **C#** ve **SQL Server** kullanılarak geliştirilmiş, ders kapsamında gerçekleştirilen bir satış ve hareket yönetimi uygulamasıdır. Uygulama, temel **CRUD** (Create, Read, Update, Delete) işlemlerini içerir ve veritabanı işlemlerinde parametreli sorgular ile güvenli veri işleme tekniklerini kullanır.
+## Görüntüsü
+
+![image](https://github.com/user-attachments/assets/1512abfe-ed84-41be-8779-49d160a19eda)
 
 ## Özellikler
 
